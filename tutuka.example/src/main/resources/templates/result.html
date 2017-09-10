@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<script>
+function report(){
+  document.getElementById("report").style.display = '';
+}
+</script>
+</head>
+<body>
+Comparison Results:
+
+<table><tr><td></td><td>
+<table border="1" cellspacing="0" cellpadding="0"><tr><td>
+<table>
+<tr align="center"><td align="center"><p th:text="${session.file1Name}" /></td></tr>
+<tr><td>
+<table>
+<tr><td>
+ <table><tr><td>Total Records</td><td> <p th:text="${session.totalFile1Records}" /></td></tr>
+ <tr><td>Matching Records</td><td> <p th:text="${session.matchingRecords}" /></td></tr>
+ <tr><td>Unmatched Records</td><td> <p th:text="${session.file1UnMatchedRecords}" /></td></tr>
+ </table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</td></tr></table>
+
+</td><td></td><td>
+
+<table border="1" cellspacing="0" cellpadding="0"><tr><td>
+<table>
+<tr align="center"><td align="center"><p th:text="${session.file2Name}" /></td></tr>
+<tr><td>
+<table>
+<tr><td>
+ <table><tr><td>Total Records</td><td> <p th:text="${session.totalFile2Records}" /></td></tr>
+ <tr><td>Matching Records</td><td> <p th:text="${session.matchingRecords}" /></td></tr>
+ <tr><td>Unmatched Records</td><td> <p th:text="${session.file2UnMatchedRecords}" /></td></tr>
+ </table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</td></tr></table>
+
+</td></tr></table>
+
+
+
+
+
+
+
+
+
+<button name="Unmatched Report" onclick="report();">Unmatched Report</button>
+
+
+<table id="report"  style="display:none">
+
+
+<p>Legend: </p>
+
+<ul>
+<li>Yellow: Fields differ between transactions in each file</li>
+<li>Green: Transaction ID was concealed successfully but record is repeated on the corresponding file</li>
+</ul>
+<tr><td>
+<table border="1">
+   <tr><td><p th:text="${session.file1Name}" /> </td><td></td><td></td><td></td><td></td><td></td><td></td><td><p th:text="${session.file2Name}" /></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+   <tr><td>Transaction ID</td><td>Date</td><td>Amount</td><td>Description</td><td>Narrative</td><td>Type</td><td>Reference</td><td>Transaction ID</td><td>Date</td><td>Amount</td><td>Description</td><td>Narrative</td><td>Type</td><td>Reference</td></tr>
+   <th:block th:each="records : ${session.list}">
+      
+      <tr th:if="${records.transactionIDConcealed}==true" bgcolor="green">
+              <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null" th:text="${records.trxFile1.id}">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.dateDiffer}" th:text="${#dates.format(records.trxFile1.date, 'yyyy-MM-dd hh:mm:ss')}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.dateDiffer}" th:text="${#dates.format(records.trxFile1.date, 'yyyy-MM-dd hh:mm:ss')}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.amountDiffer}" th:text="${records.trxFile1.amount}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.amountDiffer}" th:text="${records.trxFile1.amount}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.descriptionDiffer}" th:text="${records.trxFile1.description}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.descriptionDiffer}" th:text="${records.trxFile1.description}"  bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.narrativeDiffer}" th:text="${records.trxFile1.narrative}">...</td>
+       <td th:if="${records.trxFile1}!=null and ${records.narrativeDiffer}" th:text="${records.trxFile1.narrative}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.typeDiffer}" th:text="${records.trxFile1.type}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.typeDiffer}" th:text="${records.trxFile1.type}" bgcolor="yellow">...</td>
+
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.walletReferenceDiffer}" th:text="${records.trxFile1.walletReference}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.walletReferenceDiffer}" th:text="${records.trxFile1.walletReference}" bgcolor="yellow">...</td>
+ 
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.id}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${#dates.format(records.trxFile2.date, 'yyyy-MM-dd hh:mm:ss')}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.amount}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.description}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.narrative}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.type}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.walletReference}">...</td>
+      
+      </tr>
+      <tr th:if="${records.transactionIDConcealed}==false">
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null" th:text="${records.trxFile1.id}">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.dateDiffer}" th:text="${#dates.format(records.trxFile1.date, 'yyyy-MM-dd hh:mm:ss')}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.dateDiffer}" th:text="${#dates.format(records.trxFile1.date, 'yyyy-MM-dd hh:mm:ss')}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.amountDiffer}" th:text="${records.trxFile1.amount}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.amountDiffer}" th:text="${records.trxFile1.amount}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.descriptionDiffer}" th:text="${records.trxFile1.description}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.descriptionDiffer}" th:text="${records.trxFile1.description}"  bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.narrativeDiffer}" th:text="${records.trxFile1.narrative}">...</td>
+       <td th:if="${records.trxFile1}!=null and ${records.narrativeDiffer}" th:text="${records.trxFile1.narrative}" bgcolor="yellow">...</td>
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.typeDiffer}" th:text="${records.trxFile1.type}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.typeDiffer}" th:text="${records.trxFile1.type}" bgcolor="yellow">...</td>
+
+        <td th:if="${records.trxFile1}==null" >...</td>
+        <td th:if="${records.trxFile1}!=null and ${!records.walletReferenceDiffer}" th:text="${records.trxFile1.walletReference}">...</td>
+        <td th:if="${records.trxFile1}!=null and ${records.walletReferenceDiffer}" th:text="${records.trxFile1.walletReference}" bgcolor="yellow">...</td>
+ 
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.id}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${#dates.format(records.trxFile2.date, 'yyyy-MM-dd hh:mm:ss')}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.amount}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.description}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.narrative}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.type}">...</td>
+        <td th:if="${records.trxFile2}==null" >...</td>
+        <td th:if="${records.trxFile2}!=null" th:text="${records.trxFile2.walletReference}">...</td>
+        </tr>
+        
+   </th:block>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>
